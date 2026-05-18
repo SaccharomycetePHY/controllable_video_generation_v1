@@ -12,7 +12,9 @@ __pycache__/
 emoca/data/
 emoca/assets/
 emoca/.git/
+emoca/external/
 emoca/gdl_apps/EMOCA/video_output/
+emoca/gdl_apps/EMOCA/EMOCA_gif_sparse_*.gif
 SMPLer-X/assets/
 SMPLer-X/demo/
 SMPLer-X/output
