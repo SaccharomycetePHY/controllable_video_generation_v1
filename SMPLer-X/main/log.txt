@@ -1,0 +1,245 @@
+nohup: ignoring input
+/home/zyude/anaconda3/envs/smplerx/lib/python3.8/site-packages/mmcv/__init__.py:20: UserWarning: On January 1, 2023, MMCV will release v2.0.0, in which it will remove components related to the training process and add a data transformation module. In addition, it will rename the package names mmcv to mmcv-lite and mmcv-full to mmcv. See https://github.com/open-mmlab/mmcv/blob/master/docs/en/compatibility.md for more details.
+  warnings.warn(
+[92m10-19 03:58:43[0m Load checkpoint from ../pretrained_models/smpler_x_h32.pth.tar
+[92m10-19 03:58:43[0m Creating graph...
+load checkpoint from local path: ../pretrained_models/mmdet/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_29944-30023.mp4
+all_frams 80
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_11889-11960.mp4
+all_frams 72
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_10851-10929.mp4
+all_frams 79
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_28857-29047.mp4
+all_frams 191
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_16768-16846.mp4
+all_frams 79
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_14948-15035.mp4
+all_frams 88
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_28069-28151.mp4
+all_frams 83
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_28155-28241.mp4
+all_frams 87
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_29630-29702.mp4
+all_frams 73
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_11009-11079.mp4
+all_frams 71
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_698-864.mp4
+all_frams 167
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_11299-11428.mp4
+all_frams 130
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_27686-27777.mp4
+all_frams 92
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_28292-28439.mp4
+all_frams 148
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_11735-11824.mp4
+all_frams 90
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_2500-2630.mp4
+all_frams 131
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_29836-29941.mp4
+all_frams 106
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_26627-26784.mp4
+all_frams 158
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_1123-1226.mp4
+all_frams 104
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_27872-27963.mp4
+all_frams 92
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_10733-10850.mp4
+all_frams 118
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_27379-27489.mp4
+all_frams 111
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_27801-27869.mp4
+all_frams 69
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_496-569.mp4
+all_frams 74
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_1227-1306.mp4
+all_frams 80
+/amax/zyude/results_10_6/10664325/BV1294y157Ps/clips/clip_28623-28700.mp4
+all_frams 78
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_1264-1361.mp4
+all_frams 98
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_31995-32093.mp4
+all_frams 99
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_33166-33271.mp4
+all_frams 106
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_538-725.mp4
+all_frams 188
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_12888-12991.mp4
+all_frams 104
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_972-1110.mp4
+all_frams 139
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_32902-33155.mp4
+all_frams 254
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_32123-32339.mp4
+all_frams 217
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_13629-13762.mp4
+all_frams 134
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_12578-12804.mp4
+all_frams 227
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_2290-2382.mp4
+all_frams 93
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_13097-13203.mp4
+all_frams 107
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_32651-32797.mp4
+all_frams 147
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_1123-1239.mp4
+all_frams 117
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_35085-35215.mp4
+all_frams 131
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_35310-35464.mp4
+all_frams 155
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_22013-22107.mp4
+all_frams 95
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_26135-26226.mp4
+all_frams 92
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_32482-32599.mp4
+all_frams 118
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_34506-35045.mp4
+all_frams 540
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_33450-34325.mp4
+all_frams 876
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_6150-6309.mp4
+all_frams 160
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_726-865.mp4
+all_frams 140
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_28014-28131.mp4
+all_frams 118
+/amax/zyude/results_10_6/10664325/BV1HN411M7kF/clips/clip_34327-34493.mp4
+all_frams 167
+/amax/zyude/results_10_6/10664325/BV1fx4y1y7UE/clips/clip_5901-6005.mp4
+all_frams 105
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_15751-15871.mp4
+all_frams 121
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_8132-8260.mp4
+all_frams 129
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_14398-14579.mp4
+all_frams 182
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_15872-16152.mp4
+all_frams 281
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_12329-12625.mp4
+all_frams 297
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_3482-3598.mp4
+all_frams 117
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_12634-12897.mp4
+all_frams 264
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_15266-15394.mp4
+all_frams 129
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_12146-12328.mp4
+all_frams 183
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_13821-14109.mp4
+all_frams 289
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_3330-3478.mp4
+all_frams 149
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_14133-14397.mp4
+all_frams 265
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_1329-1426.mp4
+all_frams 98
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_8263-8468.mp4
+all_frams 206
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_14632-14772.mp4
+all_frams 141
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_13314-13475.mp4
+all_frams 162
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_15434-15648.mp4
+all_frams 215
+/amax/zyude/results_10_6/10664325/BV1KQ4y1g7Jm/clips/clip_12968-13114.mp4
+all_frams 147
+/amax/zyude/results_10_6/10664325/BV1DC411874o/clips/clip_2475-2771.mp4
+all_frams 297
+/amax/zyude/results_10_6/10664325/BV1DC411874o/clips/clip_25426-25522.mp4
+all_frams 97
+/amax/zyude/results_10_6/10664325/BV1DC411874o/clips/clip_27865-27961.mp4
+all_frams 97
+/amax/zyude/results_10_6/10664325/BV1DC411874o/clips/clip_26234-26338.mp4
+all_frams 105
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_5119-5205.mp4
+all_frams 87
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_2228-2317.mp4
+all_frams 90
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_21342-21435.mp4
+all_frams 94
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_16646-16801.mp4
+all_frams 156
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_914-1007.mp4
+all_frams 94
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_8998-9088.mp4
+all_frams 91
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_5209-5304.mp4
+all_frams 96
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_3909-4045.mp4
+all_frams 137
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_3754-3904.mp4
+all_frams 151
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_21737-21932.mp4
+all_frams 196
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_22010-22112.mp4
+all_frams 103
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_2122-2213.mp4
+all_frams 92
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_12688-12820.mp4
+all_frams 133
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_702-907.mp4
+all_frams 206
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_9494-9626.mp4
+all_frams 133
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_22938-23054.mp4
+all_frams 117
+/amax/zyude/results_10_6/10664325/BV1dE42157i7/clips/clip_4052-4148.mp4
+all_frams 97
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_23285-23449.mp4
+all_frams 165
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_22794-22926.mp4
+all_frams 133
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_15193-15277.mp4
+all_frams 85
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_18660-18790.mp4
+all_frams 131
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_8160-8240.mp4
+all_frams 81
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_8068-8158.mp4
+all_frams 91
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_15281-15456.mp4
+all_frams 176
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_21738-21809.mp4
+all_frams 72
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_5269-5397.mp4
+all_frams 129
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_31283-31419.mp4
+all_frams 137
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_5662-5771.mp4
+all_frams 110
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_5962-6106.mp4
+all_frams 145
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_20174-20248.mp4
+all_frams 75
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_11569-11779.mp4
+all_frams 211
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_21151-21221.mp4
+all_frams 71
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_10995-11140.mp4
+all_frams 146
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_30962-31043.mp4
+all_frams 82
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_11296-11522.mp4
+all_frams 227
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_13954-14036.mp4
+all_frams 83
+/amax/zyude/results_10_6/10664325/BV1eN411u7aC/clips/clip_5482-5600.mp4
+all_frams 119
+/amax/zyude/results_10_6/10664325/BV1BM4m1D7aR/clips/clip_8155-8259.mp4
+all_frams 105
+/amax/zyude/results_10_6/10664325/BV1BM4m1D7aR/clips/clip_3705-3809.mp4
+all_frams 105
+/amax/zyude/results_10_6/10664325/BV1BM4m1D7aR/clips/clip_10946-11210.mp4
+all_frams 265
+/amax/zyude/results_10_6/10664325/BV1BM4m1D7aR/clips/clip_9046-9208.mp4
+all_frams 163
+/amax/zyude/results_10_6/10664325/BV1BM4m1D7aR/clips/clip_15750-16044.mp4
+all_frams 295
+/amax/zyude/results_10_6/10664325/BV1BM4m1D7aR/clips/clip_25279-25374.mp4
+Traceback (most recent call last):
+  File "inference_video.py", line 235, in <module>
+    main()
+  File "inference_video.py", line 125, in main
+    frame_name = img_path.split('/')[-1]
+NameError: name 'img_path' is not defined
