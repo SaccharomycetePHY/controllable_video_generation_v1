@@ -1,0 +1,289 @@
+import os
+import torch
+import random
+import pickle
+import traceback
+import numpy as np
+import decord
+
+from decord import VideoReader
+from torchvision.transforms import transforms
+from torch.utils.data import Dataset
+
+from src.data.dwpose_utils.draw_pose import draw_pose
+import cv2
+
+decord.bridge.set_bridge('torch')
+
+
+class VideoDataset(Dataset):
+    def __init__(
+        self,
+        root_dir, split,
+        sample_size=(768, 576),
+        clip_size=(320, 240),
+        scale=(1.0, 1.0),
+        sample_stride=4,
+        sample_n_frames=16,
+        ref_mode="random",
+        image_finetune=False,
+        start_pixel=-1,
+        draw_face=False,
+        fix_gap=False,
+    ):
+        super().__init__()
+        self.root_dir = root_dir
+        self.split = split
+        self.load_dir = os.path.join(self.root_dir, self.split)
+        assert os.path.exists(self.load_dir), f"the path {self.load_dir} of the dataset is wrong"
+
+        self.sample_size = sample_size
+        self.clip_size = clip_size
+        assert sample_stride >= 1
+        self.sample_stride = sample_stride
+        self.sample_n_frames = sample_n_frames
+        self.at_least_n_frames = (self.sample_n_frames - 1) * self.sample_stride + 1
+        # set where the reference frame comes from, which could be "first" or "random"
+        assert ref_mode in ["first", "random"], \
+            f"the ref_mode could only be \"first\" or \"random\". However \"ref_mode = {ref_mode}\" is given."
+        self.ref_mode = ref_mode
+        self.image_finetune = image_finetune
+        self.start_pixel = start_pixel
+        self.draw_face = draw_face
+        self.fix_gap = fix_gap
+
+        # build data info
+        # self.data_keys = sorted(os.listdir(self.load_dir))
+        self.data_keys = []
+        for video_name in os.listdir(self.load_dir):
+            for clip_name in os.listdir(os.path.join(self.load_dir, video_name)):
+                self.data_keys.append(os.path.join(video_name, clip_name))
+        self.data_keys = sorted(self.data_keys)
+        self.length = len(self.data_keys)
+        print(f"数据集长度: {self.length}")
+
+        self.img_transform = transforms.Compose([
+            # ratio is w/h
+            transforms.RandomResizedCrop(
+                sample_size, scale=scale,
+                ratio=(sample_size[1]/sample_size[0], sample_size[1]/sample_size[0]), antialias=True),
+            transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5], inplace=True),
+        ])
+        self.clip_transform = transforms.Compose([
+            # ratio is w/h
+            transforms.RandomResizedCrop(
+                    clip_size, scale=scale,
+                    ratio=(clip_size[1] / clip_size[0], clip_size[1] / clip_size[0]), antialias=True),
+            transforms.Normalize([0.485, 0.456, 0.406],  # used for dino
+                                 [0.229, 0.224, 0.225],  # used for dino
+                                 inplace=True),
+        ])
+        self.pose_transform = transforms.Compose([
+            # ratio is w/h
+            transforms.RandomResizedCrop(
+                sample_size, scale=scale,
+                ratio=(sample_size[1]/sample_size[0], sample_size[1]/sample_size[0]), antialias=True),
+        ])
+        self.normal_transform = transforms.Compose([
+            # ratio is w/h
+            transforms.RandomResizedCrop(
+                sample_size, scale=(0.75, 1.0),  # 随机缩放范围在0.75-1.0之间
+                ratio=(0.5 * sample_size[1]/sample_size[0], 1.5 * sample_size[1]/sample_size[0]),  # 允许长宽比在原始比例的0.75-1.25倍之间变化
+                antialias=True),
+        ])
+    def __len__(self):
+        return len(self.data_keys)
+
+    def get_batch(self, data_id):
+        is_syn = False
+        video_path = os.path.join(self.load_dir, data_id, 'clip.mp4')
+        video_reader = VideoReader(video_path)
+        if os.path.exists(os.path.join(self.load_dir, data_id, 'smpl.mp4')):
+            smpl_path = os.path.join(self.load_dir, data_id, 'smpl.mp4')
+        else:
+            is_syn = True
+            smpl_path = os.path.join(self.load_dir, data_id, 'smooth_render.mp4')
+        smpl_reader = VideoReader(smpl_path)
+        if not is_syn:
+            ref_video_path = os.path.join(self.load_dir, data_id, 'human.mp4')
+        else:
+            ref_video_path = os.path.join(self.load_dir, data_id, 'clip.mp4')
+        ref_video_reader = VideoReader(ref_video_path)
+        if not is_syn:
+            hamer_path = os.path.join(self.load_dir, data_id, 'emoca.mp4')
+            hamer_reader = VideoReader(hamer_path)
+            normal_path = os.path.join(self.load_dir, data_id, 'normal.mp4')
+            normal_reader = VideoReader(normal_path)
+            bg_path = os.path.join(self.load_dir, data_id, 'inpaint_out.mp4')
+            bg_reader = VideoReader(bg_path)
+            fg_path = os.path.join(self.load_dir, data_id, 'object.mp4')
+            fg_reader = VideoReader(fg_path)
+        # pose_path = os.path.join(self.load_dir, 'dwpose', data_id.replace('.mp4', '.pkl'))
+        # with open(pose_path, 'rb') as pose_file:
+        #     pose_list = pickle.load(pose_file)
+            assert len(video_reader) == len(hamer_reader) == len(smpl_reader) == len(normal_reader) == len(fg_reader) == len(bg_reader)
+        video_length = len(video_reader)
+
+        if self.image_finetune:
+            if self.ref_mode == 'random':
+                batch_index = random.sample(range(video_length), 2)
+            else:
+                batch_index = [0, random.randint(1, video_length - 1)]
+        else:
+            if self.ref_mode == 'random':
+                ref_index = [random.randint(0, video_length - 1)]
+            else:
+                ref_index = [0]
+
+            if self.fix_gap:
+                if video_length < self.at_least_n_frames:
+                    raise RuntimeError(f"The `video_length` ({video_length}) is less "
+                                       f"than `at_least_n_frames`({self.at_least_n_frames}). "
+                                       f"Thus, this video will be skiped.")
+                clip_length = self.at_least_n_frames
+                start_idx = random.randint(
+                    0, video_length - clip_length
+                ) if self.start_pixel < 0 else max(min(self.start_pixel, video_length - clip_length), 0)
+                image_index = list(range(start_idx, clip_length + start_idx, self.sample_stride))
+            else:
+                clip_length = min(video_length, self.at_least_n_frames)
+                start_idx = random.randint(
+                    0, video_length - clip_length
+                ) if self.start_pixel < 0 else max(min(self.start_pixel, video_length - clip_length), 0)
+                image_index = list(
+                    np.linspace(start_idx, start_idx + clip_length - 1, self.sample_n_frames, dtype=int))
+            batch_index = ref_index + image_index
+
+        image = video_reader.get_batch(batch_index).permute(0, 3, 1, 2).contiguous() / 255.0
+        # ref_image = ref_video_reader.get_batch(batch_index).permute(0, 3, 1, 2).contiguous() / 255.0
+        # 从/zouyude/data/infer_data/ref_image中随机选择一个参考图像
+        
+        ref_dir = "/zouyude/data/infer_data/ref_image"
+        ref_images = os.listdir(ref_dir)
+        ref_idx = np.random.randint(len(ref_images))
+        ref_name = ref_images[ref_idx]
+        ref_image_path = os.path.join(ref_dir, ref_name)
+        
+        _ref_img = cv2.cvtColor(cv2.imread(ref_image_path), cv2.COLOR_BGR2RGB)
+        
+        ######### 创建一个480x640的白色背景
+        white_bg = np.ones((480, 640, 3), dtype=np.uint8) * 255
+        
+        # 获取原始图片尺寸
+        h, w = _ref_img.shape[:2]  # 修正获取图片尺寸的方式
+        
+        # 计算缩放比例
+        scale = min(480/h, 640/w)
+        if scale < 1:  # 只有当图片超出范围时才缩放
+            new_h = int(h * scale)
+            new_w = int(w * scale)
+            _ref_img = cv2.resize(_ref_img, (new_w, new_h))
+        else:
+            new_h, new_w = h, w
+            
+        # 计算居中位置
+        y_offset = (480 - new_h) // 2
+        x_offset = (640 - new_w) // 2
+        
+        # 将图片贴到白色背景中间
+        white_bg[y_offset:y_offset+new_h, x_offset:x_offset+new_w] = _ref_img
+        ref_image = torch.from_numpy(white_bg).permute(2, 0, 1).contiguous() / 255.0
+        ref_image = [ref_image]
+        ######### 将图片贴到白色背景上
+        
+        smpl = smpl_reader.get_batch(batch_index).permute(0, 3, 1, 2).contiguous() / 255.0
+        if not is_syn:
+            hamer = hamer_reader.get_batch(batch_index).permute(0, 3, 1, 2).contiguous() / 255.0
+            try:
+                normal = normal_reader.get_batch(batch_index).permute(0, 3, 1, 2).contiguous() / 255.0
+            except Exception as e:
+                print(normal_path)
+                print(traceback.format_exc())
+            bg = bg_reader.get_batch(batch_index).permute(0, 3, 1, 2).contiguous() / 255.0     
+            fg = fg_reader.get_batch(batch_index).permute(0, 3, 1, 2).contiguous() / 255.0
+        else:
+            hamer = torch.zeros(len(batch_index), 3, image.shape[-2], image.shape[-1])
+            normal = torch.zeros(len(batch_index), 3, image.shape[-2], image.shape[-1])
+            bg = torch.ones(len(batch_index), 3, image.shape[-2], image.shape[-1]) * image[0, :, 0, 0].reshape(1, 3, 1, 1)
+            fg = torch.ones(len(batch_index), 3, image.shape[-2], image.shape[-1]) * 1.0
+        # pose = [draw_pose(pose_list[batch_index[idx]], image.shape[-2], image.shape[-1], draw_face=self.draw_face)
+        #         for idx in range(len(batch_index))]
+
+        # pose = torch.from_numpy(
+        #     np.stack(pose, axis=0)).permute(0, 3, 1, 2).contiguous() / 255.0
+        if self.image_finetune:
+            ref_image, image = ref_image[0], image[1]
+            ref_hamer, ref_smpl, ref_normal = hamer[0], smpl[0], normal[0]
+            hamer, smpl, normal = hamer[1], smpl[1], normal[1]
+            bg, fg = bg[1], fg[1]
+        else:
+            ref_image, image = ref_image[0], image[1:]
+            ref_hamer, ref_smpl, ref_normal = hamer[0], smpl[0], normal[0]
+            hamer, smpl, normal = hamer[1:], smpl[1:], normal[1:]
+            bg, fg = bg[1:], fg[1:]
+
+        del video_reader
+        del ref_video_reader
+        del smpl_reader
+        if not is_syn:
+            del hamer_reader
+            del normal_reader
+            del fg_reader
+            del bg_reader
+        # return image, pose, hamer, smpl, ref_image, ref_pose, ref_hamer, ref_smpl, bg, fg
+        return image, hamer, smpl, ref_image, ref_hamer, ref_smpl, bg, fg, normal, ref_normal
+
+    @staticmethod
+    def augmentation(frame, transform, state=None):
+        if state is not None:
+            torch.set_rng_state(state)
+        return transform(frame)
+
+    def __getitem__(self, idx):
+        try_cnt = 0
+        while True:
+            try:
+                try_cnt += 1
+                if try_cnt > 10:
+                    break
+                data_id = self.data_keys[idx]
+                # image, pose, hamer, smpl, _ref_image, ref_pose, ref_hamer, ref_smpl, bg, fg = self.get_batch(data_id)
+                image, hamer, smpl, _ref_image, ref_hamer, ref_smpl, bg, fg, normal, ref_normal = self.get_batch(data_id)
+                state = torch.get_rng_state()
+                ref_image = self.augmentation(_ref_image, self.img_transform, state)
+                ref_image_clip = self.augmentation(_ref_image, self.clip_transform, state)
+                # ref_pose = self.augmentation(ref_pose, self.pose_transform, state)
+                ref_hamer = self.augmentation(ref_hamer, self.pose_transform, state)
+                ref_smpl = self.augmentation(ref_smpl, self.pose_transform, state)
+                ref_normal = self.augmentation(ref_normal, self.pose_transform, state)
+                image = self.augmentation(image, self.img_transform, state)
+                # pose = self.augmentation(pose, self.pose_transform, state)
+                hamer = self.augmentation(hamer, self.pose_transform, state)
+                smpl = self.augmentation(smpl, self.pose_transform, state)
+                normal = self.augmentation(normal, self.normal_transform, state)
+                bg_image = self.augmentation(bg, self.img_transform, state)
+                fg_image = self.augmentation(fg, self.img_transform, state)
+                if self.image_finetune:
+                    return {"data_key": data_id, "image": image,
+                            # "pose": pose,
+                            "hamer": hamer, "smpl": smpl, "normal": normal,
+                            "ref_image": ref_image, "ref_image_clip": ref_image_clip,
+                            # "ref_pose": ref_pose,
+                            "ref_hamer": ref_hamer, "ref_smpl": ref_smpl, "ref_normal": ref_normal,
+                            "bg_image": bg_image, "fg_image": fg_image}
+
+                else:
+                    return {"data_key": data_id, "image": image.permute(1, 0, 2, 3).contiguous(),
+                            # "pose": pose.permute(1, 0, 2, 3).contiguous(),
+                            "hamer": hamer.permute(1, 0, 2, 3).contiguous(),
+                            "smpl": smpl.permute(1, 0, 2, 3).contiguous(),
+                            "normal": normal.permute(1, 0, 2, 3).contiguous(),
+                            "ref_image": ref_image, "ref_image_clip": ref_image_clip,
+                            # "ref_pose": ref_pose,
+                            "ref_hamer": ref_hamer, "ref_smpl": ref_smpl, "ref_normal": ref_normal,
+                            "bg_image": bg_image.permute(1, 0, 2, 3).contiguous(), 
+                            "fg_image": fg_image.permute(1, 0, 2, 3).contiguous()}
+            except Exception as e:
+                print(f"read idx:{idx} error, {type(e).__name__}: {e}")
+                print(traceback.format_exc())
+                idx = random.randint(0, self.length - 1)
